@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 192.168.1.54-root
+ Source Server         : 10.200.46.187（balanar测试环境）
  Source Server Type    : MySQL
- Source Server Version : 50719
- Source Host           : 192.168.1.54:3306
- Source Schema         : the_garden_of_eden
+ Source Server Version : 50725
+ Source Host           : 10.200.46.187:3306
+ Source Schema         : internal
 
  Target Server Type    : MySQL
- Target Server Version : 50719
+ Target Server Version : 50725
  File Encoding         : 65001
 
- Date: 29/09/2019 17:52:14
+ Date: 31/10/2019 10:12:47
 */
 
 SET NAMES utf8mb4;
@@ -29,8 +29,9 @@ CREATE TABLE `online_app`  (
   `date` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT '上线日期',
   `time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '上线时间',
   `version` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '上线版本',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_date_time`(`date`, `time`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for online_need
@@ -42,8 +43,10 @@ CREATE TABLE `online_need`  (
   `type` tinyint(4) UNSIGNED NOT NULL DEFAULT 0 COMMENT '0 需求 1 BUG 2 优化',
   `execute_permission` tinyint(4) NOT NULL DEFAULT 0 COMMENT '执行权限文件',
   `app_id` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'online_app表主键id',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 123 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_app_id`(`app_id`) USING BTREE,
+  INDEX `idx_type`(`type`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 170 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for online_need_detail
@@ -58,8 +61,9 @@ CREATE TABLE `online_need_detail`  (
   `last_version` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '上次上线版本',
   `type` tinyint(4) UNSIGNED NOT NULL DEFAULT 0 COMMENT '类型 0 前端 1后台 2 测试',
   `need_id` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'online_need表主键id',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 91 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_need_id`(`need_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 204 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for online_need_remark
@@ -69,8 +73,24 @@ CREATE TABLE `online_need_remark`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '备注',
   `type` tinyint(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '类型 0 SQL  1 其他备注',
+  `remark_type` tinyint(3) UNSIGNED NOT NULL DEFAULT 0 COMMENT '注意事项 0  运维上线内容  1  终端上线内容  2上线影响 3上线风险及注意事项',
   `need_id` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'online_need表主键id',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_need_id`(`need_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for upload_file_info
+-- ----------------------------
+DROP TABLE IF EXISTS `upload_file_info`;
+CREATE TABLE `upload_file_info`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `origin_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `target_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `upload_time` bigint(20) NULL DEFAULT NULL,
+  `app_id` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `idx_app_id`(`app_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 498 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
