@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zqsy.onlinetool.mapper.OnlineNeedRemarkMapper" >
+
+  <resultMap id="BaseResultMap" type="com.zqsy.onlinetool.model.OnlineNeedRemark" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="remark_type" property="remarkType" jdbcType="TINYINT" />
+    <result column="need_id" property="needId" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithBLOBs" type="com.zqsy.onlinetool.model.OnlineNeedRemark" extends="BaseResultMap" >
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, type, remark_type, need_id
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    remark
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from online_need_remark
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from online_need_remark
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.zqsy.onlinetool.model.OnlineNeedRemark" >
+    insert into online_need_remark (id, type, remark_type,
+      need_id, remark)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=TINYINT}, #{remarkType,jdbcType=TINYINT},
+      #{needId,jdbcType=INTEGER}, #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.zqsy.onlinetool.model.OnlineNeedRemark" >
+    insert into online_need_remark
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="remarkType != null" >
+        remark_type,
+      </if>
+      <if test="needId != null" >
+        need_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="remarkType != null" >
+        #{remarkType,jdbcType=TINYINT},
+      </if>
+      <if test="needId != null" >
+        #{needId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.zqsy.onlinetool.model.OnlineNeedRemark" >
+    update online_need_remark
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="remarkType != null" >
+        remark_type = #{remarkType,jdbcType=TINYINT},
+      </if>
+      <if test="needId != null" >
+        need_id = #{needId,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.zqsy.onlinetool.model.OnlineNeedRemark" >
+    update online_need_remark
+    set type = #{type,jdbcType=TINYINT},
+      remark_type = #{remarkType,jdbcType=TINYINT},
+      need_id = #{needId,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.zqsy.onlinetool.model.OnlineNeedRemark" >
+    update online_need_remark
+    set type = #{type,jdbcType=TINYINT},
+      remark_type = #{remarkType,jdbcType=TINYINT},
+      need_id = #{needId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <resultMap id="OnlineNeedRemarkVo" type="com.zqsy.onlinetool.vo.OnlineNeedRemarkVo" extends="ResultMapWithBLOBs" ></resultMap>
+
+  <select id="selectSQLRemark" resultMap="OnlineNeedRemarkVo">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from online_need_remark
+    where need_id = #{needId,jdbcType=INTEGER}
+    and type = 0
+  </select>
+
+  <select id="selectOtherRemark" resultMap="OnlineNeedRemarkVo">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from online_need_remark
+    where need_id = #{needId,jdbcType=INTEGER}
+    and type = 1
+  </select>
+
+  <select id="selectByNeedId" resultMap="OnlineNeedRemarkVo">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from online_need_remark
+    where need_id = #{needId,jdbcType=INTEGER}
+  </select>
+
+</mapper>
