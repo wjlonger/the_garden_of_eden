@@ -3,6 +3,7 @@ package com.zqsy.onlinetool.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class StreamUtils {
 
@@ -28,6 +29,20 @@ public class StreamUtils {
             }
         }
         return bytes;
+    }
+
+    public static void fromInputStream2OutputStream(InputStream inputStream, OutputStream outputStream){
+        if (null == inputStream || null == outputStream) return;
+        byte[] bytes = new byte[1024];
+        int n;
+        try {
+            while ((n = inputStream.read(bytes)) != -1){
+                outputStream.write(bytes, 0, n);
+            }
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -64,38 +68,24 @@ public class FileController {
 
     @GetMapping("/{id}")
     public void downLoad (@PathVariable("id") Integer id, HttpServletResponse response) {
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
-        try {
-            hasFile : {
-                UploadFileInfo uploadFileInfo = fileService.selectByPrimaryKey(id);
-                if(null == uploadFileInfo || StringUtils.isEmpty(uploadFileInfo.getTargetName())){
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    outputStream = response.getOutputStream();
-                    outputStream.write("{msg:\"文件不存在或被移除\"}".getBytes());
-                    break hasFile;
-                }
-                response.setContentType("application/force-download");
-                response.addHeader("Content-disposition", "attachment;filename=" + uploadFileInfo.getOriginName());
-                inputStream = new FileInputStream(uploadFileInfo.getTargetName());
-                outputStream = response.getOutputStream();
-                outputStream.write(StreamUtils.toByteArray(inputStream));
+        UploadFileInfo uploadFileInfo = fileService.selectByPrimaryKey(id);
+        if(null == uploadFileInfo || StringUtils.isEmpty(uploadFileInfo.getTargetName())){
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            try (OutputStream outputStream = response.getOutputStream()) {
+                outputStream.write("{msg:\"文件不存在或被移除\"}".getBytes());
+                outputStream.flush();
+            } catch (IOException e) {
             }
-            outputStream.flush();
+            return;
+        }
+        try(InputStream inputStream = new FileInputStream(uploadFileInfo.getTargetName());
+            OutputStream outputStream = response.getOutputStream()) {
+            response.setContentType("application/force-download");
+            response.addHeader(HttpHeaders.CONTENT_DISPOSITION,
+                    ContentDisposition.builder("attachment")
+                            .filename(uploadFileInfo.getOriginName(), StandardCharsets.UTF_8).build().toString());
+            StreamUtils.fromInputStream2OutputStream(inputStream, outputStream);
         } catch (IOException e) {
-        }finally {
-            if(null != inputStream){
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                }
-            }
-            if(null != outputStream){
-                try {
-                    outputStream.close();
-                } catch (IOException e) {
-                }
-            }
         }
     }
 
