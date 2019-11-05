@@ -31,4 +31,12 @@ public class OnlineNeedController {
         this.onlineNeedService.update(onlineNeed);
     }
 
+    @PutMapping("/{needId}/{appId}")
+    public void modifyAppId(@PathVariable("needId") Integer needId,@PathVariable("appId") Integer appId){
+        OnlineNeed onlineNeed = new OnlineNeed();
+        onlineNeed.setId(needId);
+        onlineNeed.setAppId(appId);
+        onlineNeedService.update(onlineNeed);
+    }
+
 }
