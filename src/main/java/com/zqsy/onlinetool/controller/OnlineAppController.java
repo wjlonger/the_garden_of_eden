@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zqsy.onlinetool.model.OnlineApp;
 import com.zqsy.onlinetool.service.OnlineAppService;
+import com.zqsy.onlinetool.vo.OnlineAppVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -18,18 +19,19 @@ public class OnlineAppController {
     private OnlineAppService onlineAppService;
 
     @GetMapping("/{pageIndex}/{pageSize}")
-    public PageInfo<OnlineApp> list(@PathVariable("pageIndex") Integer pageIndex,
-                                    @PathVariable("pageSize") Integer pageSize){
+    public PageInfo<OnlineAppVo> list(@PathVariable("pageIndex") Integer pageIndex,
+                                      @PathVariable("pageSize") Integer pageSize){
         return PageHelper.startPage(pageIndex,pageSize)
                 .setOrderBy("date desc,time desc").doSelectPageInfo(() -> this.onlineAppService.list(null));
     }
 
     @GetMapping
-    public PageInfo<OnlineApp> list(@RequestParam(value = "pageIndex",defaultValue = "1", required = false) Integer pageIndex,
-                                    @RequestParam(value = "pageSize",defaultValue = "10",required = false) Integer pageSize,
+    public PageInfo<OnlineAppVo> list(@RequestParam(value = "pageIndex",defaultValue = "1", required = false) Integer pageIndex,
+                                    @RequestParam(value = "pageSize",defaultValue = "5",required = false) Integer pageSize,
                                     @RequestParam(value = "lastId", required = false) Integer lastId){
         return PageHelper.startPage(pageIndex,pageSize)
-                .setOrderBy("date desc,time desc").doSelectPageInfo(() -> this.onlineAppService.list(lastId));
+                .setOrderBy("id desc")
+                .doSelectPageInfo(() -> this.onlineAppService.list(lastId));
     }
 
     @PostMapping

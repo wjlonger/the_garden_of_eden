@@ -13,6 +13,7 @@
   <resultMap id="UploadFileInfoVo" type="com.zqsy.onlinetool.vo.UploadFileInfoVo">
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="origin_name" property="originName" jdbcType="VARCHAR" />
+    <result column="app_id" property="appId" jdbcType="INTEGER" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -20,7 +21,7 @@
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from upload_file_info
     where id = #{id,jdbcType=INTEGER}
@@ -35,9 +36,9 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT last_insert_id()
     </selectKey>
-    insert into upload_file_info (id, origin_name, target_name, 
+    insert into upload_file_info (id, origin_name, target_name,
       upload_time, app_id)
-    values (#{id,jdbcType=INTEGER}, #{originName,jdbcType=VARCHAR}, #{targetName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{originName,jdbcType=VARCHAR}, #{targetName,jdbcType=VARCHAR},
       #{uploadTime,jdbcType=BIGINT}, #{appId,jdbcType=INTEGER})
   </insert>
 
@@ -112,6 +113,17 @@
     select id,origin_name
     from upload_file_info
     where app_id = #{appId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByAppIds" resultMap="UploadFileInfoVo">
+    select id,origin_name,app_id
+    from (
+      <foreach collection="appIds" index="index" item="item" open="(" separator="union all" close=")">
+        select id,origin_name,app_id
+        from upload_file_info
+        where app_id = #{item,jdbcType=INTEGER}
+      </foreach>
+    ) t
   </select>
 
 </mapper>

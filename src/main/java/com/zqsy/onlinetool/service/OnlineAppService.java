@@ -1,12 +1,13 @@
 package com.zqsy.onlinetool.service;
 
 import com.zqsy.onlinetool.model.OnlineApp;
+import com.zqsy.onlinetool.vo.OnlineAppVo;
 
 import java.util.List;
 
 public interface OnlineAppService {
 
-    List<OnlineApp> list(Integer lastId);
+    List<OnlineAppVo> list(Integer lastId);
 
     int create(OnlineApp onlineApp);
 

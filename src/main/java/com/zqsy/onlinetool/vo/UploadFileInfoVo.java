@@ -8,6 +8,8 @@ public class UploadFileInfoVo implements Serializable {
 
     private String originName;
 
+    private Integer appId;
+
     public Integer getId() {
         return id;
     }
@@ -22,5 +24,13 @@ public class UploadFileInfoVo implements Serializable {
 
     public void setOriginName(String originName) {
         this.originName = originName;
+    }
+
+    public Integer getAppId() {
+        return appId;
+    }
+
+    public void setAppId(Integer appId) {
+        this.appId = appId;
     }
 }

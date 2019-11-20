@@ -147,4 +147,21 @@
     where need_id = #{needId,jdbcType=INTEGER}
   </select>
 
+  <select id="selectByNeedIds" resultMap="OnlineNeedRemarkVo">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from (
+        <foreach collection="needIds" index="index" item="item" open="(" separator="union all" close=")">
+          select
+          <include refid="Base_Column_List" />
+          ,
+          <include refid="Blob_Column_List" />
+          from online_need_remark
+          where need_id = #{item,jdbcType=INTEGER}
+        </foreach>
+    ) t
+  </select>
+
 </mapper>

@@ -21,4 +21,6 @@ public interface OnlineNeedMapper {
     int updateByPrimaryKey(OnlineNeed record);
 
     List<OnlineNeedVo> selectByAppId(@Param("appId") Integer appId);
+
+    List<OnlineNeedVo> selectByAppIds(@Param("appIds") List<Integer> appIds);
 }

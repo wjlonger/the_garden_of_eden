@@ -1,6 +1,9 @@
 package com.zqsy.onlinetool.service;
 
 import com.zqsy.onlinetool.model.OnlineNeed;
+import com.zqsy.onlinetool.vo.OnlineNeedVo;
+
+import java.util.List;
 
 public interface OnlineNeedService {
 
@@ -9,4 +12,6 @@ public interface OnlineNeedService {
     int delete(Integer id);
 
     int update(OnlineNeed onlineNeed);
+
+    List<OnlineNeedVo> selectByAppIds(List<Integer> appIds);
 }

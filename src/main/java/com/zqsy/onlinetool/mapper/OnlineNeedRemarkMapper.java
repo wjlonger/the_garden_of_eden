@@ -1,6 +1,10 @@
 package com.zqsy.onlinetool.mapper;
 
 import com.zqsy.onlinetool.model.OnlineNeedRemark;
+import com.zqsy.onlinetool.vo.OnlineNeedRemarkVo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OnlineNeedRemarkMapper {
 
@@ -17,4 +21,6 @@ public interface OnlineNeedRemarkMapper {
     int updateByPrimaryKeyWithBLOBs(OnlineNeedRemark record);
 
     int updateByPrimaryKey(OnlineNeedRemark record);
+
+    List<OnlineNeedRemarkVo> selectByNeedIds(@Param("needIds") List<Integer> needIds);
 }

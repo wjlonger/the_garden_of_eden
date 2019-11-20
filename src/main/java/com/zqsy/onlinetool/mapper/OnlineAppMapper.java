@@ -1,13 +1,14 @@
 package com.zqsy.onlinetool.mapper;
 
 import com.zqsy.onlinetool.model.OnlineApp;
+import com.zqsy.onlinetool.vo.OnlineAppVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface OnlineAppMapper {
 
-    List<OnlineApp> list(@Param("lastId") Integer lastId);
+    List<OnlineAppVo> list(@Param("lastId") Integer lastId);
 
     int deleteByPrimaryKey(@Param("id") Integer id);
 

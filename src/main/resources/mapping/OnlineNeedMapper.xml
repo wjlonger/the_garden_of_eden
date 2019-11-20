@@ -11,8 +11,8 @@
     </resultMap>
 
     <resultMap id="OnlineNeedVo" type="com.zqsy.onlinetool.vo.OnlineNeedVo" extends="BaseResultMap">
-        <collection column="id" property="needs" select="com.zqsy.onlinetool.mapper.OnlineNeedDetailMapper.selectByNeedId"></collection>
-        <collection column="id" property="remarks" select="com.zqsy.onlinetool.mapper.OnlineNeedRemarkMapper.selectByNeedId"></collection>
+<!--        <collection column="id" property="needs" select="com.zqsy.onlinetool.mapper.OnlineNeedDetailMapper.selectByNeedId"></collection>-->
+<!--        <collection column="id" property="remarks" select="com.zqsy.onlinetool.mapper.OnlineNeedRemarkMapper.selectByNeedId"></collection>-->
     </resultMap>
 
     <sql id="Base_Column_List" >
@@ -114,6 +114,18 @@
         from online_need
         where app_id = #{appId,jdbcType=INTEGER}
         order by `type` asc, `id` asc
+    </select>
+
+    <select id="selectByAppIds" resultMap="OnlineNeedVo">
+        select <include refid="Base_Column_List" />
+        from (
+        <foreach collection="appIds" index="index" item="item" open="(" separator="union all" close=")">
+            select <include refid="Base_Column_List" />
+            from online_need
+            where app_id = #{item,jdbcType=INTEGER}
+        </foreach>
+        ) t
+        order by t.`type` asc, t.`id` asc
     </select>
 
 </mapper>

@@ -13,8 +13,8 @@
   </resultMap>
 
   <resultMap id="OnlineAppVo" type="com.zqsy.onlinetool.vo.OnlineAppVo" extends="BaseResultMap">
-    <collection column="id" property="needList" select="com.zqsy.onlinetool.mapper.OnlineNeedMapper.selectByAppId"></collection>
-    <collection column="id" property="fileList" select="com.zqsy.onlinetool.mapper.FileMapper.selectByAppId"></collection>
+<!--    <collection column="id" property="needList" select="com.zqsy.onlinetool.mapper.OnlineNeedMapper.selectByAppId"></collection>-->
+<!--    <collection column="id" property="fileList" select="com.zqsy.onlinetool.mapper.FileMapper.selectByAppId"></collection>-->
   </resultMap>
 
   <sql id="Base_Column_List" >

@@ -23,7 +23,7 @@ public class OnlineAppVo implements Serializable {
 
     private List<OnlineNeedVo> needList;
 
-    private List<UploadFileInfo> fileList;
+    private List<UploadFileInfoVo> fileList;
 
     public Integer getId() {
         return id;
@@ -89,11 +89,11 @@ public class OnlineAppVo implements Serializable {
         this.needList = needList;
     }
 
-    public List<UploadFileInfo> getFileList() {
+    public List<UploadFileInfoVo> getFileList() {
         return fileList;
     }
 
-    public void setFileList(List<UploadFileInfo> fileList) {
+    public void setFileList(List<UploadFileInfoVo> fileList) {
         this.fileList = fileList;
     }
 }

@@ -169,4 +169,15 @@
     where need_id = #{needId,jdbcType=INTEGER}
   </select>
 
+  <select id="selectByNeedIds" resultMap="OnlineNeedDetailVo">
+    select <include refid="Base_Column_List" />
+    from (
+    <foreach collection="needIds" index="index" item="item" open="(" separator="union all" close=")">
+      select <include refid="Base_Column_List" />
+      from online_need_detail
+      where need_id = #{item,jdbcType=INTEGER}
+    </foreach>
+    ) t
+  </select>
+
 </mapper>
