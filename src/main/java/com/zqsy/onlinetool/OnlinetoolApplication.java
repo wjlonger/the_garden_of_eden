@@ -15,10 +15,6 @@ public class OnlinetoolApplication {
         SpringApplication.run(OnlinetoolApplication.class, args);
     }
 
-    @Bean("restTemplate")
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
 
     @Bean("jsonObject")
     public JSONObject jsonObject(){
