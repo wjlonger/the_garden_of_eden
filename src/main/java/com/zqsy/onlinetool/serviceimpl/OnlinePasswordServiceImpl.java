@@ -9,6 +9,7 @@ import com.zqsy.onlinetool.model.OnlinePassword;
 import com.zqsy.onlinetool.service.OnlinePasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -28,11 +29,9 @@ public class OnlinePasswordServiceImpl implements OnlinePasswordService {
     @Autowired
     private DingTalkClient dingTalkClient;
 
-    @Autowired
-    private JSONObject jsonObject;
-
     @Override
     public JSONObject getPassword(Integer id, String httpToken) {
+        JSONObject jsonObject = new JSONObject();
         OnlinePassword password = passwords.get(id);
         if(null == password || password.getExpireDate() < System.currentTimeMillis()){
             TokenApplyRequest tokenApplyRequest = new TokenApplyRequest();
@@ -52,7 +51,7 @@ public class OnlinePasswordServiceImpl implements OnlinePasswordService {
                 password.setExpireDate(System.currentTimeMillis() + expireTime);
                 password.setPassword(passwordStr);
                 passwords.put(id, password);
-                jsonObject.put("success",false);
+                jsonObject.put("success",true);
                 jsonObject.put("msg","密码发送成功，请查看钉钉群");
             }else{
                 jsonObject.put("success", false);
@@ -60,8 +59,17 @@ public class OnlinePasswordServiceImpl implements OnlinePasswordService {
             }
         } else {
             jsonObject.put("success", false);
-            jsonObject.put("msg","密码已生成，有效期两个小时，请勿重复点击。");
+            jsonObject.put("msg","密码已生成，请查看钉钉群。密码有效期两个小时，请勿重复点击。");
         }
         return jsonObject;
+    }
+
+    @Override
+    public boolean chenckPassword(Integer id, String password) {
+        OnlinePassword onlinePassword = passwords.get(id);
+        return null != password
+                && null != onlinePassword
+                && null != onlinePassword.getPassword()
+                && DigestUtils.md5DigestAsHex(onlinePassword.getPassword().getBytes()).equals(password);
     }
 }

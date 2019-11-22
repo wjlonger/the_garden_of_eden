@@ -6,4 +6,6 @@ public interface OnlinePasswordService {
 
     JSONObject getPassword(Integer id, String httpToken);
 
+    boolean chenckPassword(Integer id, String password);
+
 }

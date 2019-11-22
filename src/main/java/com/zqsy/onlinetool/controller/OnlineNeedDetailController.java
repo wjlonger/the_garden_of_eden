@@ -1,9 +1,8 @@
 package com.zqsy.onlinetool.controller;
 
-import com.zqsy.onlinetool.model.OnlineNeed;
+import com.alibaba.fastjson.JSONObject;
 import com.zqsy.onlinetool.model.OnlineNeedDetail;
 import com.zqsy.onlinetool.service.OnlineNeedDetailService;
-import com.zqsy.onlinetool.service.OnlineNeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +30,11 @@ public class OnlineNeedDetailController {
     @PutMapping
     public void update(@RequestBody OnlineNeedDetail onlineNeedDetail){
         this.onlineNeedDetailService.update(onlineNeedDetail);
+    }
+
+    @GetMapping("/{appId}")
+    public JSONObject detail(@PathVariable("appId") Integer appId, @RequestParam("password") String password){
+        return this.onlineNeedDetailService.detail(appId, password);
     }
 
 }

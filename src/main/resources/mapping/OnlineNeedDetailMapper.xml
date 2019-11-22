@@ -180,4 +180,15 @@
     ) t
   </select>
 
+  <select id="selectByAppId" resultMap="OnlineNeedDetailVo">
+    select <include refid="Base_Column_List" />
+    from online_need_detail detail
+    where exists (
+        select 1 from online_need need
+        where need.app_id = #{appId, jdbcType=INTEGER}
+        and detail.need_id = need.id
+    )
+    and type &lt; 2;
+  </select>
+
 </mapper>

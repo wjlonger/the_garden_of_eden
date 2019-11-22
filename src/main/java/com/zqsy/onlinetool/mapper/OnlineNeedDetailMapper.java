@@ -22,5 +22,7 @@ public interface OnlineNeedDetailMapper {
 
     List<OnlineNeedDetailVo> selectByNeedId(@Param("needId") Integer needId);
 
-    List<OnlineNeedDetailVo> selectByNeedIds(@Param("needIds")List<Integer> needIds);
+    List<OnlineNeedDetailVo> selectByNeedIds(@Param("needIds") List<Integer> needIds);
+
+    List<OnlineNeedDetailVo> selectByAppId(@Param("appId") Integer appId);
 }

@@ -29,9 +29,6 @@ import java.util.UUID;
 public class FileController {
 
     @Autowired
-    private JSONObject jsonObject;
-
-    @Autowired
     private FileService fileService;
 
     @Value("${upload.filepath}")
@@ -39,6 +36,7 @@ public class FileController {
 
     @PostMapping("/{appId}")
     public JSONObject singleFileUpload(@RequestParam("file") MultipartFile file, @PathVariable("appId") Integer appId) {
+        JSONObject jsonObject = new JSONObject();
         String date = LocalDate.now().toString();
         File folder = new File(filePath + date);
         if(!folder.exists() && !folder.isDirectory()){
