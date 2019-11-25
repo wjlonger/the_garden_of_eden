@@ -1,7 +1,6 @@
 package com.zqsy.onlinetool.mapper;
 
 import com.zqsy.onlinetool.model.OnlineNeedDetail;
-import com.zqsy.onlinetool.vo.OnlineNeedDetaiForFinishlVo;
 import com.zqsy.onlinetool.vo.OnlineNeedDetailVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,5 +24,5 @@ public interface OnlineNeedDetailMapper {
 
     List<OnlineNeedDetailVo> selectByNeedIds(@Param("needIds") List<Integer> needIds);
 
-    List<OnlineNeedDetaiForFinishlVo> selectByAppId(@Param("appId") Integer appId);
+    List<OnlineNeedDetailVo> selectByAppId(@Param("appId") Integer appId);
 }

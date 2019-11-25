@@ -22,4 +22,6 @@ public interface OnlineFinishMapper {
 
     List<OnlineFinishVo> selectByAppId(@Param("appId") Integer appId);
 
+    OnlineFinish selectByAppIdByProjectNameByArea(@Param("appId") Integer appId, @Param("onlineAppName") String onlineAppName, @Param("area") String area);
+
 }

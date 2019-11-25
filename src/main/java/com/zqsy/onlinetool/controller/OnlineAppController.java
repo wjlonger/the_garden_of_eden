@@ -1,9 +1,11 @@
 package com.zqsy.onlinetool.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zqsy.onlinetool.model.OnlineApp;
 import com.zqsy.onlinetool.service.OnlineAppService;
+import com.zqsy.onlinetool.vo.OnlineAppBuildVo;
 import com.zqsy.onlinetool.vo.OnlineAppVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -49,4 +51,8 @@ public class OnlineAppController {
         this.onlineAppService.update(onlineApp);
     }
 
+    @PostMapping("/build")
+    public JSONObject build(@RequestBody OnlineAppBuildVo onlineAppBuildVo){
+        return this.onlineAppService.build(onlineAppBuildVo);
+    }
 }

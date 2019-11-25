@@ -2,7 +2,6 @@ package com.zqsy.onlinetool.serviceimpl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zqsy.onlinetool.mapper.OnlineNeedDetailMapper;
-import com.zqsy.onlinetool.model.OnlineFinish;
 import com.zqsy.onlinetool.model.OnlineNeedDetail;
 import com.zqsy.onlinetool.service.OnlineFinishService;
 import com.zqsy.onlinetool.service.OnlineNeedDetailService;
@@ -10,14 +9,10 @@ import com.zqsy.onlinetool.service.OnlinePasswordService;
 import com.zqsy.onlinetool.vo.OnlineFinishVo;
 import com.zqsy.onlinetool.vo.OnlineNeedDetaiForFinishlVo;
 import com.zqsy.onlinetool.vo.OnlineNeedDetailVo;
-import com.zqsy.onlinetool.vo.OnlineNeedVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 
 @Service("onlineNeedDetailService")
@@ -57,14 +52,14 @@ public class OnlineNeedServiceDetailImpl implements OnlineNeedDetailService {
         JSONObject jsonObject = new JSONObject();
         boolean passwordCorrect = this.onlinePasswordService.chenckPassword(appId, password);
         if(passwordCorrect){
-            List<OnlineNeedDetaiForFinishlVo> needVos = this.onlineNeedDetailMapper.selectByAppId(appId);
+            List<OnlineNeedDetailVo> needVos = this.onlineNeedDetailMapper.selectByAppId(appId);
             if(null != needVos && !needVos.isEmpty()){
-                List<OnlineFinishVo> finishVos = this.onlineFinishService.selectByAppId(appId);
-                needVos.forEach(onlineNeedDetaiForFinishlVo -> {
-                    onlineNeedDetaiForFinishlVo.setOnlineFinishVo(finishVos.stream().filter(onlineFinishVo ->  onlineNeedDetaiForFinishlVo.getProjectName().equals(onlineFinishVo.getOnlineAppName())).findFirst().orElse(null));
-                });
+                List<OnlineFinishVo> finishVos = onlineFinishService.selectByAppId(appId);
+                OnlineNeedDetaiForFinishlVo onlineNeedDetaiForFinishlVo = new OnlineNeedDetaiForFinishlVo();
+                onlineNeedDetaiForFinishlVo.setOnlineDetail(needVos);
+                onlineNeedDetaiForFinishlVo.setFinishDetail(finishVos);
                 jsonObject.put("success", true);
-                jsonObject.put("data", needVos);
+                jsonObject.put("data", onlineNeedDetaiForFinishlVo);
             } else {
                 jsonObject.put("success", false);
                 jsonObject.put("msg", "研发同学还未填写上线应用哦~");

@@ -1,12 +1,17 @@
 package com.zqsy.onlinetool.serviceimpl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.zqsy.onlinetool.adam.client.AdamClient;
+import com.zqsy.onlinetool.adam.request.TaskBuildAdamRequest;
 import com.zqsy.onlinetool.mapper.OnlineAppMapper;
 import com.zqsy.onlinetool.model.OnlineApp;
-import com.zqsy.onlinetool.model.OnlineNeedRemark;
+import com.zqsy.onlinetool.model.OnlineFinish;
+import com.zqsy.onlinetool.model.OnlinePassword;
 import com.zqsy.onlinetool.service.*;
 import com.zqsy.onlinetool.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +37,18 @@ public class OnlineAppServiceImpl implements OnlineAppService {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private OnlineFinishService onlineFinishService;
+
+    @Autowired
+    private AdamClient adamClient;
+
+    @Autowired
+    private HashMap<Integer, OnlinePassword> passwords;
+
+    @Autowired
+    private OnlinePasswordService onlinePasswordService;
 
     @Override
     public List<OnlineAppVo> list(Integer lastId){
@@ -98,5 +115,46 @@ public class OnlineAppServiceImpl implements OnlineAppService {
     @Override
     public int update(OnlineApp onlineApp) {
         return this.onlineAppMapper.updateByPrimaryKeySelective(onlineApp);
+    }
+
+    @Override
+    public JSONObject build(OnlineAppBuildVo onlineAppBuildVo) {
+        JSONObject jsonObject = new JSONObject();
+        boolean passwordCorrect = this.onlinePasswordService.chenckPassword(onlineAppBuildVo.getAppId(), onlineAppBuildVo.getPassword());
+        if(!passwordCorrect){
+            jsonObject.put("success", false);
+            jsonObject.put("msg", "密码错误");
+            return jsonObject;
+        }
+        TaskBuildAdamRequest taskBuildRequest = new TaskBuildAdamRequest();
+        taskBuildRequest.setRegion(onlineAppBuildVo.getRegion());
+        taskBuildRequest.setTaskName(onlineAppBuildVo.getTaskName());
+        taskBuildRequest.setHttpToken(onlineAppBuildVo.getHttpToken());
+        taskBuildRequest.setToken(passwords.get(onlineAppBuildVo.getAppId()).getAccessToken());
+        if(!StringUtils.isEmpty(onlineAppBuildVo.getTag())){
+            taskBuildRequest.setParams(new HashMap<String, Object>(){{
+                put("Tag", onlineAppBuildVo.getTag());
+            }});
+        }
+        adamClient.execute(taskBuildRequest);
+        OnlineFinish onlineFinish = this.onlineFinishService.selectByAppIdByProjectNameByArea(onlineAppBuildVo.getAppId(), onlineAppBuildVo.getTaskName(), onlineAppBuildVo.getRegion());
+        if(null == onlineFinish) {
+            onlineFinish = new OnlineFinish();
+            onlineFinish.setAppId(onlineAppBuildVo.getAppId());
+            onlineFinish.setArea(onlineAppBuildVo.getRegion());
+            onlineFinish.setOnlineAppName(onlineAppBuildVo.getTaskName());
+            onlineFinish.setOnlineVersion(onlineAppBuildVo.getTag());
+            onlineFinish.setUpdateTime(System.currentTimeMillis());
+            this.onlineFinishService.insert(onlineFinish);
+        } else {
+            onlineFinish.setArea(onlineAppBuildVo.getRegion());
+            onlineFinish.setOnlineAppName(onlineAppBuildVo.getTaskName());
+            onlineFinish.setOnlineVersion(onlineAppBuildVo.getTag());
+            onlineFinish.setUpdateTime(System.currentTimeMillis());
+            this.onlineFinishService.update(onlineFinish);
+        }
+        jsonObject.put("success", true);
+        jsonObject.put("msg", "构建成功");
+        return jsonObject;
     }
 }

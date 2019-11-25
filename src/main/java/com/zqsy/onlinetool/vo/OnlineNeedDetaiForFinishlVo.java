@@ -1,16 +1,27 @@
 package com.zqsy.onlinetool.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class OnlineNeedDetaiForFinishlVo extends OnlineNeedDetailVo implements Serializable {
+public class OnlineNeedDetaiForFinishlVo implements Serializable {
 
-    private OnlineFinishVo onlineFinishVo;
+    private List<OnlineNeedDetailVo> onlineDetail;
 
-    public OnlineFinishVo getOnlineFinishVo() {
-        return onlineFinishVo;
+    private List<OnlineFinishVo> finishDetail;
+
+    public List<OnlineNeedDetailVo> getOnlineDetail() {
+        return onlineDetail;
     }
 
-    public void setOnlineFinishVo(OnlineFinishVo onlineFinishVo) {
-        this.onlineFinishVo = onlineFinishVo;
+    public void setOnlineDetail(List<OnlineNeedDetailVo> onlineDetail) {
+        this.onlineDetail = onlineDetail;
+    }
+
+    public List<OnlineFinishVo> getFinishDetail() {
+        return finishDetail;
+    }
+
+    public void setFinishDetail(List<OnlineFinishVo> finishDetail) {
+        this.finishDetail = finishDetail;
     }
 }

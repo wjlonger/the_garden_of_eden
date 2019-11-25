@@ -7,12 +7,14 @@
     <result column="online_version" property="onlineVersion" jdbcType="VARCHAR" />
     <result column="online_app_name" property="onlineAppName" jdbcType="VARCHAR" />
     <result column="app_id" property="appId" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="BIGINT" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap id="OnlineFinishVo" type="com.zqsy.onlinetool.vo.OnlineFinishVo" extends="BaseResultMap"></resultMap>
 
   <sql id="Base_Column_List" >
-    id, online_version, online_app_name, app_id
+    id, online_version, online_app_name, app_id, update_time, area
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -29,9 +31,11 @@
 
   <insert id="insert" parameterType="com.zqsy.onlinetool.model.OnlineFinish" >
     insert into online_finish (id, online_version, online_app_name,
-      app_id)
+      app_id, update_time, area
+      )
     values (#{id,jdbcType=INTEGER}, #{onlineVersion,jdbcType=VARCHAR}, #{onlineAppName,jdbcType=VARCHAR},
-      #{appId,jdbcType=INTEGER})
+      #{appId,jdbcType=INTEGER}, #{updateTime,jdbcType=BIGINT}, #{area,jdbcType=VARCHAR}
+      )
   </insert>
 
   <insert id="insertSelective" parameterType="com.zqsy.onlinetool.model.OnlineFinish" >
@@ -49,6 +53,12 @@
       <if test="appId != null" >
         app_id,
       </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -62,6 +72,12 @@
       </if>
       <if test="appId != null" >
         #{appId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -78,6 +94,12 @@
       <if test="appId != null" >
         app_id = #{appId,jdbcType=INTEGER},
       </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=BIGINT},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -86,7 +108,9 @@
     update online_finish
     set online_version = #{onlineVersion,jdbcType=VARCHAR},
       online_app_name = #{onlineAppName,jdbcType=VARCHAR},
-      app_id = #{appId,jdbcType=INTEGER}
+      app_id = #{appId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=BIGINT},
+      area = #{area,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -94,6 +118,14 @@
     select <include refid="Base_Column_List" />
     from online_finish
     where app_id = #{appId, jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByAppIdByProjectNameByArea" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from online_finish
+    where online_app_name = #{onlineAppName, jdbcType=VARCHAR}
+    and app_id = #{appId, jdbcType=INTEGER}
+    and area = #{area, jdbcType=VARCHAR}
   </select>
 
 </mapper>

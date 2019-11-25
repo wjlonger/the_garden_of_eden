@@ -15,8 +15,6 @@
 
   <resultMap id="OnlineNeedDetailVo" type="com.zqsy.onlinetool.vo.OnlineNeedDetailVo" extends="BaseResultMap"></resultMap>
 
-  <resultMap id="OnlineNeedDetaiForFinishlVo" type="com.zqsy.onlinetool.vo.OnlineNeedDetaiForFinishlVo" extends="OnlineNeedDetailVo"></resultMap>
-
   <sql id="Base_Column_List" >
     id, project_name, project_branch, user_name, new_project, last_version, type, need_id
   </sql>
@@ -182,7 +180,7 @@
     ) t
   </select>
 
-  <select id="selectByAppId" resultMap="OnlineNeedDetaiForFinishlVo">
+  <select id="selectByAppId" resultMap="OnlineNeedDetailVo">
     select <include refid="Base_Column_List" />
     from online_need_detail detail
     where exists (
